@@ -1,17 +1,17 @@
 import { NavLink } from "react-router-dom";
-import LogoSvg from "../svgs/LogoSvg";
-import useTheme from "../../hooks/useThemeContext";
-import ModeButton from "../header/ModeButton";
-import Button from "../header/Button";
-import NavButton from "../header/NavButton";
+import LogoSvg from "../../svgs/LogoSvg";
+import useTheme from "../../../hooks/useThemeContext";
+import ModeButton from "../../header/ModeButton";
+import Button from "../../header/Button";
+import NavButton from "../../header/NavButton";
 
-export default function Header() {
+export default function ScreenModeHeader() {
   const { theme } = useTheme();
   return (
     <header
       className={` ${
         theme === "light" ? "text-[#1E2329]" : "text-[#EAECEF]"
-      } flex items-center justify-between pr-6 font-medium text-sm`}
+      }  items-center justify-between pr-6 font-medium text-sm hidden md:flex`}
     >
       <nav className="flex items-center justify-center leading-[22px] gap-x-6 ">
         <NavLink to="/">

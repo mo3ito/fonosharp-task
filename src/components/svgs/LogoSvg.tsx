@@ -1,7 +1,7 @@
 export default function LogoSvg() {
   return (
     <svg
-      className="h-16 w-44"
+      className="h-16 w-40"
       xmlns="http://www.w3.org/2000/svg"
       id="svg20"
       version="1.1"
