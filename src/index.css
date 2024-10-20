@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components{
+  .nav-link-light-mode{
+    color: #8D5F02 ;
+  }
+  .nav-link-light-mode:hover{
+    color: #F0B90B ;
+  }
+}

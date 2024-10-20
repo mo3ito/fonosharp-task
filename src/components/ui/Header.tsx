@@ -1,30 +1,31 @@
 import { NavLink } from "react-router-dom";
 import LogoSvg from "../svgs/LogoSvg";
 import useTheme from "../../hooks/useThemeContext";
-
-
+import ModeButton from "../header/ModeButton";
 
 export default function Header() {
-    const {toggleTheme , theme} = useTheme()
+  const { toggleTheme, theme } = useTheme();
   return (
-    <header className={` ${theme === 'light' ? 'text-[#1E2329]' : 'text-[#EAECEF]'} flex items-center justify-between pr-6 `}>
-      <nav className="flex items-center justify-center  text-sm leading-[22px] font-medium  gap-x-5">
-        <NavLink to="/">
-        <LogoSvg/>
+    <header
+      className={` ${
+        theme === "light" ? "text-[#1E2329]" : "text-[#EAECEF]"
+      } flex items-center justify-between pr-6 font-medium text-sm`}
+    >
+      <nav className="flex items-center justify-center   leading-[22px]  gap-x-5 ">
+        <NavLink  to="/">
+          <LogoSvg />
         </NavLink>
-        <NavLink>Markets</NavLink>
-        <NavLink>Trade</NavLink>
-        <NavLink>Derivatives</NavLink>
-        <NavLink>More</NavLink>
+        <div className="flex items-center justify-center gap-x-5 -translate-x-4">
+        <NavLink className={`${theme === 'light' ? 'hover:text-[#8D5F02]' : 'hover:text-[#F0B90B]'}`}>Markets</NavLink>
+        <NavLink className={`${theme === 'light' ? 'hover:text-[#8D5F02]' : 'hover:text-[#F0B90B]'}`}>Trade</NavLink>
+        <NavLink className={`${theme === 'light' ? 'hover:text-[#8D5F02]' : 'hover:text-[#F0B90B]'}`}>Derivatives</NavLink>
+        <NavLink className={`${theme === 'light' ? 'hover:text-[#8D5F02]' : 'hover:text-[#F0B90B]'}`}>More</NavLink>
+        </div>
       </nav>
-      <section>
+      <section className="flex items-center justify-center gap-x-4">
 
-        { theme === "dark" ? <button onClick={()=>toggleTheme()}>
-        <svg  className="size-6  fill-[#EAECEF]" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M13.5 3h-3v3h3V3zm0 15h-3v3h3v-3zm-6.803-2.818l2.121 2.121-2.121 2.122-2.122-2.122 2.122-2.121zm12.728-8.485l-2.122-2.122-2.12 2.122 2.12 2.121 2.122-2.121zM15.5 12a3.5 3.5 0 11-7 0 3.5 3.5 0 017 0zM6.697 8.818l2.121-2.121-2.121-2.122-2.122 2.122 2.122 2.121zM6 10.5v3H3v-3h3zm15 0v3h-3v-3h3zm-1.576 6.803l-2.12 2.121-2.122-2.12 2.121-2.122 2.121 2.121z" ></path></svg>
-        </button>
-       : <button onClick={()=>toggleTheme()}>
-        <svg className="size-6 fill-[#2B3139] " viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 12.67A6.233 6.233 0 0111.33 4 8.015 8.015 0 1020 12.67z" ></path></svg>
-        </button>}
+      <button className="h-8 w-16 bg-[#EAECEF] text-[#202630] rounded-md">Log In</button>
+        <ModeButton/>
       </section>
     </header>
   );
