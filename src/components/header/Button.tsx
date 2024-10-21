@@ -10,7 +10,7 @@ export default function Button({ content, btnClass , onClick }:ButtonProps) {
     const [isClick , setIsClick]=useState<boolean>(false)
   return (
     <button
-      className={`${btnClass} h-8 px-3  rounded-md`}
+      className={`${btnClass} h-8 px-3  rounded-lg`}
       onClick={onClick}
     >
       {content}
