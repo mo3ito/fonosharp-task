@@ -2,11 +2,7 @@ import axios, { AxiosResponse, AxiosError } from "axios";
 
 const getData = async (url: string) => {
   try {
-    const response: AxiosResponse = await axios.get(url, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response: AxiosResponse = await axios.get(url);
     return response;
   } catch (error: unknown) {
     console.error("error: ", error);
@@ -14,7 +10,7 @@ const getData = async (url: string) => {
       console.error("Request failed with status:", error.response?.status);
       console.error("Response data:", error.response?.data);
     }
-    alert("خطای ناگهانی رخ داده است");
+    alert(error);
     return undefined;
   }
 };
