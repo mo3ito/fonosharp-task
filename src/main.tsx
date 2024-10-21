@@ -4,6 +4,7 @@ import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Layout from "./components/ui/Layout.tsx";
 import ThemeContextProvider from "./context/ThemeContext.tsx";
+import ReactQueryProvider from "./providers/ReactQueryProvider.tsx";
 
 const router = createBrowserRouter([
   {
@@ -14,7 +15,9 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")!).render(
-  <ThemeContextProvider>
-    <RouterProvider router={router} />
-  </ThemeContextProvider>
+  <ReactQueryProvider>
+    <ThemeContextProvider>
+      <RouterProvider router={router} />
+    </ThemeContextProvider>
+  </ReactQueryProvider>
 );
