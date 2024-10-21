@@ -1,9 +1,13 @@
 import useTheme from "../../hooks/useThemeContext";
 
-export default function MenuButton() {
+type MenuButtonProps = {
+  Onclick: () => void;
+};
+
+export default function MenuButton({ Onclick }: MenuButtonProps) {
   const { theme } = useTheme();
   return (
-    <button>
+    <button onClick={Onclick}>
       <svg
         className={`${
           theme === "dark" ? "fill-[#EAECEF]" : "fill-[#1E2329]"

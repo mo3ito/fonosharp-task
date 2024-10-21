@@ -2,8 +2,15 @@ import LogoSvg from "../../svgs/LogoSvg";
 import Button from "../../header/Button";
 import useTheme from "../../../hooks/useThemeContext";
 import MenuButton from "../../header/MenuButton";
+import { Dispatch, SetStateAction } from "react";
 
-export default function MobileModeHeader() {
+type MobileModeHeader = {
+  setIsShowSideMenu: Dispatch<SetStateAction<boolean>>;
+};
+
+export default function MobileModeHeader({
+  setIsShowSideMenu,
+}: MobileModeHeader) {
   const { theme } = useTheme();
   return (
     <header className="flex md:hidden items-center justify-between pr-4">
@@ -17,7 +24,7 @@ export default function MobileModeHeader() {
               : "bg-[#FCD535] text-[#202630] "
           } hover:opacity-80`}
         />
-        <MenuButton />
+        <MenuButton Onclick={() => setIsShowSideMenu(true)} />
       </section>
     </header>
   );
