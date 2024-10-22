@@ -101,7 +101,7 @@ function App() {
   };
 
   if (isLoading) {
-    return Loading
+    return <Loading/>
   }
 
   if (isError) {
@@ -133,7 +133,6 @@ function App() {
       <div className={`  text-center  mt-10 flex items-start justify-center`}>
         <p className="bg-[#FCD535] p-2 rounded-md"> Last Updated: {lastUpdated}</p>
         </div>
-        <Loading/>
     </div>
   );
 }
