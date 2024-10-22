@@ -8,7 +8,7 @@ export default function LastUpdatedData({ time, theme }: LastUpdatedProps) {
     <div
       className={` ${
         theme === "light" ? "text-[#1E2329]" : "text-[#EAECEF]"
-      } text-center mt-10 font-bold`}
+      } text-center my-5 font-bold`}
     >
       Last Updated: {time}
     </div>
