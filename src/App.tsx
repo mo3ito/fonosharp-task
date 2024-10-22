@@ -1,6 +1,4 @@
 import "./App.css";
-import { useQuery } from "@tanstack/react-query";
-import getData from "./services/getData";
 import useTheme from "./hooks/useThemeContext";
 import { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
@@ -8,15 +6,10 @@ import { ApexOptions } from "apexcharts";
 import { CandlestickData } from "./types/apexChartTypes";
 import Loading from "./components/Loading";
 import { toast } from "react-toastify";
-import { BINANCEAPI } from "./services/endpoints/apis";
 import { getChartOptions } from "./helper/chartOptions";
-
-const fetchCandlestickData = async (symbol: string, interval: string) => {
-  const response = await getData(
-    `${BINANCEAPI}?symbol=${symbol}&interval=${interval}&limit=1440`
-  );
-  return response?.data;
-};
+import IntervalSelector from "./components/IntervalSelector";
+import LastUpdatedData from "./components/LastUpdatedData";
+import useCandlestickData from "./hooks/useCandlestickData";
 
 function App() {
   const [interval, setInterval] = useState<string>("1m");
@@ -24,12 +17,10 @@ function App() {
   const [lastUpdated, setLastUpdated] = useState<string>("");
   const { theme } = useTheme();
   const chartOptions = getChartOptions(theme, interval);
-
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["candlestickData", interval],
-    queryFn: () => fetchCandlestickData("BTCUSDT", interval),
-    refetchInterval: 60000,
-  });
+  const { data, isLoading, isError, refetch } = useCandlestickData(
+    "BTCUSDT",
+    interval
+  );
 
   useEffect(() => {
     if (data) {
@@ -55,10 +46,7 @@ function App() {
     }
   }, [data]);
 
-  const handleIntervalChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const newInterval = event.target.value;
+  const handleIntervalChange = (newInterval: string) => {
     setInterval(newInterval);
     refetch();
   };
@@ -72,33 +60,14 @@ function App() {
 
   return (
     <main className="min-h-screen px-5 md:px-6 z-30 pt-16">
-      <div className="mb-4 flex justify-center sm:justify-start ">
-        <select
-          className="border rounded-lg p-2 sm:p-2 w-64 z-30"
-          value={interval}
-          onChange={handleIntervalChange}
-        >
-          {["1m", "5m", "15m", "1h", "1d"].map((timeframe) => (
-            <option key={timeframe} value={timeframe}>
-              {timeframe}
-            </option>
-          ))}
-        </select>
-      </div>
+      <IntervalSelector interval={interval} onChange={handleIntervalChange} />
       <ReactApexChart
         options={chartOptions as ApexOptions}
         series={[{ name: "candle", data: candlestickData }]}
         type="candlestick"
         height={"85%"}
       />
-
-      <div
-        className={` ${
-          theme === "light" ? "text-[#1E2329]" : "text-[#EAECEF]"
-        } text-center mt-10 font-bold `}
-      >
-        Last Updated: {lastUpdated}
-      </div>
+      <LastUpdatedData time={lastUpdated} theme={theme} />
     </main>
   );
 }

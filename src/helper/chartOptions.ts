@@ -18,7 +18,7 @@ export const getChartOptions = (
   },
   tooltip: {
     enabled: true,
-    theme: theme === "dark" ? "white" : "black",
+    theme: theme === "dark" ? "dark" : "light", 
   },
   xaxis: {
     type: "datetime",
