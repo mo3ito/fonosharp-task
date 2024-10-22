@@ -8,15 +8,19 @@ import { ApexOptions } from "apexcharts";
 import { CandlestickData } from "./types/apexChartTypes";
 import Loading from "./components/Loading";
 import { toast } from "react-toastify";
+import { BINANCEAPI } from "./services/endpoints/apis";
 
 
 
 const fetchCandlestickData = async (symbol: string, interval: string) => {
   const response = await getData(
-    `https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=1440`
+    `${BINANCEAPI}?symbol=${symbol}&interval=${interval}&limit=1440`
   );
   return response?.data;
 };
+
+
+
 
 function App() {
   const [interval, setInterval] = useState<string>("1m");
