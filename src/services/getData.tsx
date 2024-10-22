@@ -10,7 +10,8 @@ const getData = async (url: string) => {
       console.error("Request failed with status:", error.response?.status);
       console.error("Response data:", error.response?.data);
     }
-    alert(error);
+    console.error(error);
+
     return undefined;
   }
 };

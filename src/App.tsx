@@ -7,6 +7,7 @@ import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { CandlestickData } from "./types/apexChartTypes";
 import Loading from "./components/Loading";
+import { toast } from "react-toastify";
 
 
 
@@ -105,7 +106,7 @@ function App() {
   }
 
   if (isError) {
-    return <div>Error loading data. Please try again later.</div>;
+    return toast.error('Error loading data. Please try again later.')
   }
 
   return (
