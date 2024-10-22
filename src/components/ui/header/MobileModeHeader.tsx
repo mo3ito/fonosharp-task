@@ -13,7 +13,11 @@ export default function MobileModeHeader({
 }: MobileModeHeader) {
   const { theme } = useTheme();
   return (
-    <header className="flex md:hidden items-center justify-between pr-4">
+    <header
+      className={`${
+        theme === "dark" ? "bg-[#1E2026]" : "bg-white"
+      } flex md:hidden items-center justify-between pr-4 fixed top-0 inset-x-0 z-40`}
+    >
       <LogoSvg />
       <section className="flex items-center gap-x-4">
         <Button

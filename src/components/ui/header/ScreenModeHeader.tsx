@@ -10,10 +10,12 @@ export default function ScreenModeHeader() {
   return (
     <header
       className={` ${
-        theme === "light" ? "text-[#1E2329]" : "text-[#EAECEF]"
-      }  items-center justify-between pr-6 font-medium text-sm hidden md:flex`}
+        theme === "light"
+          ? "text-[#1E2329] bg-white"
+          : "text-[#EAECEF] bg-[#1E2026]"
+      } fixed top-0 inset-x-0 items-center justify-between pr-6 font-medium text-sm hidden md:flex z-50 `}
     >
-      <nav className="flex items-center justify-center leading-[22px] gap-x-6 ">
+      <nav className="flex items-center justify-center leading-[22px] gap-x-6  ">
         <NavLink to="/">
           <LogoSvg />
         </NavLink>

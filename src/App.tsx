@@ -11,8 +11,6 @@ import { toast } from "react-toastify";
 import { BINANCEAPI } from "./services/endpoints/apis";
 import { getChartOptions } from "./helper/chartOptions";
 
-
-
 const fetchCandlestickData = async (symbol: string, interval: string) => {
   const response = await getData(
     `${BINANCEAPI}?symbol=${symbol}&interval=${interval}&limit=1440`
@@ -36,9 +34,20 @@ function App() {
   useEffect(() => {
     if (data) {
       const transformedData = data.map(
-        ([timestamp, open, high, low, close]: [number, string, string, string, string]) => ({
+        ([timestamp, open, high, low, close]: [
+          number,
+          string,
+          string,
+          string,
+          string
+        ]) => ({
           x: new Date(timestamp),
-          y: [parseFloat(open), parseFloat(high), parseFloat(low), parseFloat(close)],
+          y: [
+            parseFloat(open),
+            parseFloat(high),
+            parseFloat(low),
+            parseFloat(close),
+          ],
         })
       );
       setCandlestickData(transformedData);
@@ -46,30 +55,32 @@ function App() {
     }
   }, [data]);
 
-  const handleIntervalChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleIntervalChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     const newInterval = event.target.value;
     setInterval(newInterval);
-    refetch(); 
+    refetch();
   };
 
   if (isLoading) {
-    return <Loading/>
+    return <Loading />;
   }
   if (isError) {
-    return toast.error('Error loading data. Please try again later.')
+    return toast.error("Error loading data. Please try again later.");
   }
 
   return (
-    <div className="min-h-screen px-5 md:px-6">
+    <main className="min-h-screen px-5 md:px-6 z-30 pt-16">
       <div className="mb-4 flex justify-center sm:justify-start ">
         <select
-          className="border rounded-lg p-2 sm:p-2 w-64"
+          className="border rounded-lg p-2 sm:p-2 w-64 z-30"
           value={interval}
           onChange={handleIntervalChange}
         >
           {["1m", "5m", "15m", "1h", "1d"].map((timeframe) => (
             <option key={timeframe} value={timeframe}>
-            {timeframe}
+              {timeframe}
             </option>
           ))}
         </select>
@@ -78,13 +89,17 @@ function App() {
         options={chartOptions as ApexOptions}
         series={[{ name: "candle", data: candlestickData }]}
         type="candlestick"
-        height={"80%"}
+        height={"85%"}
       />
-      
-      <div className={`  text-center  mt-10 flex items-start justify-center`}>
-        <p className="bg-[#FCD535] p-2 rounded-md"> Last Updated: {lastUpdated}</p>
-        </div>
-    </div>
+
+      <div
+        className={` ${
+          theme === "light" ? "text-[#1E2329]" : "text-[#EAECEF]"
+        } text-center mt-10 font-bold `}
+      >
+        Last Updated: {lastUpdated}
+      </div>
+    </main>
   );
 }
 
