@@ -9,6 +9,7 @@ import { CandlestickData } from "./types/apexChartTypes";
 import Loading from "./components/Loading";
 import { toast } from "react-toastify";
 import { BINANCEAPI } from "./services/endpoints/apis";
+import { getChartOptions } from "./helper/chartOptions";
 
 
 
@@ -19,14 +20,12 @@ const fetchCandlestickData = async (symbol: string, interval: string) => {
   return response?.data;
 };
 
-
-
-
 function App() {
   const [interval, setInterval] = useState<string>("1m");
   const [candlestickData, setCandlestickData] = useState<CandlestickData[]>([]);
   const [lastUpdated, setLastUpdated] = useState<string>("");
   const { theme } = useTheme();
+  const chartOptions = getChartOptions(theme, interval);
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["candlestickData", interval],
@@ -47,58 +46,6 @@ function App() {
     }
   }, [data]);
 
-  const chartOptions = {
-    chart: {
-      type: 'candlestick',
-      background: theme === "dark" ? "#333" : "#fff",
-    },
-    title: {
-      text: `CandleStick Chart - BTCUSDT (${interval})`,
-      align: "left",
-      style: {
-        color: theme === "dark" ? "white" : "black", 
-      },
-    },
-    tooltip: {
-      enabled: true,
-      style: {
-        color: theme === "dark" ? "white" : "black", 
-      },
-    },
-    xaxis: {
-      type: "datetime",
-      labels: {
-        formatter: (val: string) => new Date(val).toLocaleTimeString(),
-        style: {
-          colors: theme === "dark" ? "white" : "black",
-        },
-      },
-    },
-    yaxis: {
-      tooltip: {
-        enabled: true,
-      },
-      labels: {
-        style: {
-          colors: theme === "dark" ? "white" : "black",
-        },
-      },
-    },
-    responsive: [
-      {
-        breakpoint: 768,
-        options: {
-          chart: {
-            width: "100%",
-          },
-          title: {
-            text: `BTCUSDT (${interval})`,
-          },
-        },
-      },
-    ],
-  };
-  
   const handleIntervalChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newInterval = event.target.value;
     setInterval(newInterval);
@@ -108,7 +55,6 @@ function App() {
   if (isLoading) {
     return <Loading/>
   }
-
   if (isError) {
     return toast.error('Error loading data. Please try again later.')
   }
