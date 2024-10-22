@@ -1,67 +1,140 @@
 import "./App.css";
 import { useQuery } from "@tanstack/react-query";
 import getData from "./services/getData";
-import { AdvancedRealTimeChart  } from "react-ts-tradingview-widgets";
 import useTheme from "./hooks/useThemeContext";
 import { useEffect, useState } from "react";
+import ReactApexChart from "react-apexcharts";
+import { ApexOptions } from "apexcharts";
+import { CandlestickData } from "./types/apexChartTypes";
+import Loading from "./components/Loading";
 
-type Interval = "1" | "3" | "5" | "15" | "30" | "60" | "120" | "180" | "240" | "D" | "W";
+
+
 const fetchCandlestickData = async (symbol: string, interval: string) => {
   const response = await getData(
-    `https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${interval}`
+    `https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=1440`
   );
   return response?.data;
 };
 
 function App() {
   const [interval, setInterval] = useState<string>("1m");
-  const [candlestickData, setCandlestickData] = useState([]);
+  const [candlestickData, setCandlestickData] = useState<CandlestickData[]>([]);
   const [lastUpdated, setLastUpdated] = useState<string>("");
   const { theme } = useTheme();
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["candlestickData", interval],
-    queryFn: () => {
-      return fetchCandlestickData("BTCUSDT", interval);
-    },
+    queryFn: () => fetchCandlestickData("BTCUSDT", interval),
     refetchInterval: 60000,
   });
 
   useEffect(() => {
     if (data) {
-      setCandlestickData(data);
+      const transformedData = data.map(
+        ([timestamp, open, high, low, close]: [number, string, string, string, string]) => ({
+          x: new Date(timestamp),
+          y: [parseFloat(open), parseFloat(high), parseFloat(low), parseFloat(close)],
+        })
+      );
+      setCandlestickData(transformedData);
       setLastUpdated(new Date().toLocaleTimeString());
     }
   }, [data]);
 
-  const handleIntervalChange = (newInterval: string) => {
+  const chartOptions = {
+    chart: {
+      type: 'candlestick',
+      background: theme === "dark" ? "#333" : "#fff",
+    },
+    title: {
+      text: `CandleStick Chart - BTCUSDT (${interval})`,
+      align: "left",
+      style: {
+        color: theme === "dark" ? "white" : "black", 
+      },
+    },
+    tooltip: {
+      enabled: true,
+      style: {
+        color: theme === "dark" ? "white" : "black", 
+      },
+    },
+    xaxis: {
+      type: "datetime",
+      labels: {
+        formatter: (val: string) => new Date(val).toLocaleTimeString(),
+        style: {
+          colors: theme === "dark" ? "white" : "black",
+        },
+      },
+    },
+    yaxis: {
+      tooltip: {
+        enabled: true,
+      },
+      labels: {
+        style: {
+          colors: theme === "dark" ? "white" : "black",
+        },
+      },
+    },
+    responsive: [
+      {
+        breakpoint: 768,
+        options: {
+          chart: {
+            width: "100%",
+          },
+          title: {
+            text: `BTCUSDT (${interval})`,
+          },
+        },
+      },
+    ],
+  };
+  
+  const handleIntervalChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const newInterval = event.target.value;
     setInterval(newInterval);
-    refetch();
+    refetch(); 
   };
 
-  console.log(candlestickData);
+  if (isLoading) {
+    return Loading
+  }
+
+  if (isError) {
+    return <div>Error loading data. Please try again later.</div>;
+  }
 
   return (
-    <div className="h-screen px-5 md:px-6">
-    <div className="w-full h-[80%] ">
-      <AdvancedRealTimeChart
-        theme={theme}
-        symbol="BINANCE:BTCUSDT"
-        autosize
-      ></AdvancedRealTimeChart>
-      <p>Last updated: {lastUpdated}</p>
-      <div>
-          <button className="w-44 h-12 bg-yellow-400" onClick={() => handleIntervalChange("1m")}>1m</button>
-          <button className="w-44 h-12 bg-yellow-400" onClick={() => handleIntervalChange("5m")}>5m</button>
-          <button className="w-44 h-12 bg-yellow-400" onClick={() => handleIntervalChange("15m")}>15m</button>
-          <button className="w-44 h-12 bg-yellow-400" onClick={() => handleIntervalChange("1h")}>1h</button>
-          <button className="w-44 h-12 bg-yellow-400" onClick={() => handleIntervalChange("1d")}>1d</button>
+    <div className="min-h-screen px-5 md:px-6">
+      <div className="mb-4 flex justify-center sm:justify-start ">
+        <select
+          className="border rounded-lg p-2 sm:p-2 w-64"
+          value={interval}
+          onChange={handleIntervalChange}
+        >
+          {["1m", "5m", "15m", "1h", "1d"].map((timeframe) => (
+            <option key={timeframe} value={timeframe}>
+            {timeframe}
+            </option>
+          ))}
+        </select>
+      </div>
+      <ReactApexChart
+        options={chartOptions as ApexOptions}
+        series={[{ name: "candle", data: candlestickData }]}
+        type="candlestick"
+        height={"80%"}
+      />
+      
+      <div className={`  text-center  mt-10 flex items-start justify-center`}>
+        <p className="bg-[#FCD535] p-2 rounded-md"> Last Updated: {lastUpdated}</p>
         </div>
-        {isLoading && <p>Loading data...</p>}
-        {isError && <p>Error fetching data...</p>}
+        <Loading/>
     </div>
-    </div>
-    
   );
 }
 
